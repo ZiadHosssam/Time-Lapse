@@ -1,0 +1,65 @@
+{
+  "name": "desktop-cctv-electrno",
+  "version": "1.0.0",
+  "description": "Desktop timelapse CCTV recorder for Windows and Linux",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "check": "node --check src/main.js && node --check src/preload.js && node --check src/renderer/renderer.js",
+    "prepare-icons": "node scripts/generate-icons.js",
+    "build": "npm run prepare-icons && electron-builder",
+    "pack": "npm run prepare-icons && electron-builder --dir",
+    "dist": "npm run prepare-icons && electron-builder"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "ffmpeg-static": "^5.3.0"
+  },
+  "devDependencies": {
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "png-to-ico": "^2.1.8"
+  },
+  "build": {
+    "appId": "com.studycctv.desktop",
+    "productName": "Study CCTV",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "linux": {
+      "icon": "assets/security-camera.png",
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    }
+  }
+}

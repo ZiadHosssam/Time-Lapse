@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Study CCTV Desktop</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,300,0,0" />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="ambient ambient-a" aria-hidden="true"></div>
+    <div class="ambient ambient-b" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="topbar">
+        <button id="profileBtn" class="profile-btn" aria-label="Open profile and settings">
+          <span class="material-symbols-outlined icon-center" aria-hidden="true">person</span>
+        </button>
+        <p class="eyebrow">YOUR PERSONAL STUDY ARCHIVE</p>
+        <h1>Study CCTV</h1>
+        <p id="welcomeText">Controlled desktop timelapse intake and archival console.</p>
+      </header>
+
+      <section id="homeScreen" class="screen screen-active dashboard-card">
+        <h2>Home</h2>
+        <p class="screen-sub">Your recording stats and recent sessions.</p>
+
+        <div class="stats-grid">
+          <article class="stat-item">
+            <p class="stat-label">Sessions Recorded</p>
+            <p id="sessionsStat" class="stat-value">0</p>
+          </article>
+          <article class="stat-item">
+            <p class="stat-label">Frames Captured</p>
+            <p id="framesStat" class="stat-value">0</p>
+          </article>
+          <article class="stat-item">
+            <p class="stat-label">Timelapse Minutes</p>
+            <p id="minutesStat" class="stat-value">0.00</p>
+          </article>
+        </div>
+
+        <div class="actions-row compact">
+          <button id="toSetupBtn" class="btn-accent">Start New Session</button>
+        </div>
+
+        <div class="actions-row compact">
+          <button id="buildDigestBtn" class="btn-mono">Build 30-Day Digest</button>
+        </div>
+
+        <div class="recent-box">
+          <p class="recent-title">Recent Sessions</p>
+          <ul id="recentSessions" class="recent-list"></ul>
+        </div>
+      </section>
+
+      <section id="setupScreen" class="screen setup-card">
+        <h2>New Session</h2>
+        <p class="screen-sub">Choose a name and tag before recording starts.</p>
+        <div class="field-grid one-col">
+          <label>
+            <span>Session Name</span>
+            <input id="sessionNameInput" type="text" placeholder="Morning Focus" />
+          </label>
+          <label>
+            <span>Session Tag</span>
+            <input id="tagInput" type="text" placeholder="desk" />
+          </label>
+        </div>
+        <div class="actions-row three-btns">
+          <button id="backHomeBtn" class="btn-mono">Back</button>
+          <button id="beginSessionBtn" class="btn-accent">Begin Recording</button>
+          <button id="buildFromFolderBtn" class="btn-mono">Build From Frames Folder</button>
+        </div>
+      </section>
+
+      <section id="recordScreen" class="screen">
+        <section class="preview-card">
+          <div class="preview-head">
+            <p class="head-label">Live Intake</p>
+            <span class="state-pill" id="statePill">Standby</span>
+          </div>
+          <video id="preview" autoplay playsinline muted></video>
+        </section>
+
+        <section class="controls-card">
+          <div class="actions-row one-btn">
+            <button id="stopBtn" class="btn-stop" disabled>Stop Recording</button>
+          </div>
+
+          <div class="status-box">
+            <p id="frames">Frames: 0</p>
+            <p id="state">Status: Ready</p>
+            <p id="outputPath"></p>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <aside id="profilePanel" class="profile-panel" aria-hidden="true">
+      <div class="panel-head">
+        <div>
+          <p class="panel-title">Profile & Settings</p>
+          <p class="panel-subtitle">Tune capture behavior and interface style.</p>
+        </div>
+        <button id="closeProfileBtn" class="close-btn" aria-label="Close panel">
+          <span class="material-symbols-outlined icon-center" aria-hidden="true">close</span>
+        </button>
+      </div>
+
+      <div class="panel-content">
+        <div class="settings-section mini-stats">
+          <p>User: <strong id="panelUserName">Operator</strong></p>
+          <p>Sessions: <strong id="panelSessionsStat">0</strong></p>
+          <p>Frames: <strong id="panelFramesStat">0</strong></p>
+          <p>Minutes: <strong id="panelMinutesStat">0.00</strong></p>
+        </div>
+
+        <div class="panel-tabs" role="tablist" aria-label="Settings sections">
+          <button class="panel-tab is-active" type="button" data-view="profile">Profile</button>
+          <button class="panel-tab" type="button" data-view="capture">Capture</button>
+          <button class="panel-tab" type="button" data-view="appearance">Appearance</button>
+          <button class="panel-tab" type="button" data-view="storage">Storage</button>
+        </div>
+
+        <div class="panel-views">
+          <section class="settings-section panel-view is-active" data-view="profile">
+            <p class="section-title">Profile</p>
+            <label>
+              <span>Name</span>
+              <input id="userNameInput" type="text" placeholder="Your name" />
+            </label>
+          </section>
+
+          <section class="settings-section panel-view" data-view="capture">
+            <p class="section-title">Capture</p>
+            <div class="field-2col">
+              <label>
+                <span>Interval Seconds</span>
+                <input id="intervalInput" type="number" min="0.2" step="0.1" value="1.5" />
+              </label>
+              <label>
+                <span>Output FPS</span>
+                <input id="fpsInput" type="number" min="1" step="1" value="30" />
+              </label>
+            </div>
+            <label>
+              <span>Default Session Tag</span>
+              <input id="defaultTagInput" type="text" value="desktop" />
+            </label>
+            <label class="switch-row">
+              <input id="mirrorToggle" type="checkbox" checked />
+              <span>Mirror Correction (real-world orientation)</span>
+            </label>
+            <label class="switch-row">
+              <input id="motionCaptureToggle" type="checkbox" />
+              <span>Motion-Triggered Capture (save frame only when scene changes)</span>
+            </label>
+            <label>
+              <span>Motion Threshold (0.01 to 1.00)</span>
+              <input id="motionThresholdInput" type="number" min="0.01" max="1" step="0.01" value="0.08" />
+            </label>
+            <label class="switch-row">
+              <input id="hotkeyToggle" type="checkbox" checked />
+              <span>Hotkey Enabled (Ctrl+Shift+R to start/stop)</span>
+            </label>
+            <p class="section-title">Overlay Options</p>
+            <label class="switch-row">
+              <input id="overlayTimestampToggle" type="checkbox" checked />
+              <span>Timestamp Burn-In</span>
+            </label>
+            <label class="switch-row">
+              <input id="overlaySessionNameToggle" type="checkbox" checked />
+              <span>Session Name Watermark</span>
+            </label>
+            <label class="switch-row">
+              <input id="overlayProgressBarToggle" type="checkbox" />
+              <span>Progress Bar Overlay</span>
+            </label>
+          </section>
+
+          <section class="settings-section panel-view" data-view="appearance">
+            <p class="section-title">Appearance</p>
+            <label>
+              <span>Theme</span>
+              <select id="themeSelect"></select>
+            </label>
+            <div class="field-2col">
+              <label>
+                <span>Borders</span>
+                <select id="borderStyleSelect">
+                  <option value="full">Full Borders</option>
+                  <option value="underline">Underline Only</option>
+                </select>
+              </label>
+              <label>
+                <span>Corners</span>
+                <select id="cornerStyleSelect">
+                  <option value="rounded">Rounded</option>
+                  <option value="boxy">Boxy</option>
+                </select>
+              </label>
+            </div>
+          </section>
+
+          <section class="settings-section panel-view" data-view="storage">
+            <p class="section-title">Storage</p>
+            <label>
+              <span>Session Output Directory</span>
+              <input id="outputDirInput" type="text" readonly />
+            </label>
+            <div class="actions-row two-btns">
+              <button id="pickOutputDirBtn" class="btn-mono">Choose Directory</button>
+              <button id="clearDataBtn" class="btn-danger">Clear All Data</button>
+            </div>
+            <label>
+              <span>Disk Warning Threshold (GB)</span>
+              <input id="diskWarningInput" type="number" min="1" step="1" value="5" />
+            </label>
+            <p id="diskUsageText" class="disk-usage-text">Disk usage: calculating...</p>
+          </section>
+        </div>
+
+        <div class="panel-actions">
+          <button id="saveSettingsBtn" class="btn-accent">Save Settings</button>
+        </div>
+      </div>
+    </aside>
+
+    <div id="panelBackdrop" class="panel-backdrop" hidden></div>
+
+    <canvas id="captureCanvas" hidden></canvas>
+    <script src="./renderer.js"></script>
+  </body>
+</html>
